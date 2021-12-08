@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "basic": "node basic/hello.js",
     "start": "node app.js",
+    "basic": "nodemon basic/basic.js",
     "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
