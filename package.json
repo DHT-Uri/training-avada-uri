@@ -1,12 +1,11 @@
 {
   "name": "training-avada-uri",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node src/app.js",
     "basic": "nodemon basic/basic.js",
-    "dev": "nodemon app.js",
+    "dev": "nodemon src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,10 +14,23 @@
   "dependencies": {
     "axios": "^0.24.0",
     "express": "^4.17.1",
+    "koa": "^2.13.4",
+    "koa-body": "^4.2.0",
+    "koa-router": "^10.1.1",
     "morgan": "^1.10.0",
-    "node-fetch": "^3.1.0"
+    "node-fetch": "^3.1.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DHT-Uri/training-avada-uri.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DHT-Uri/training-avada-uri/issues"
+  },
+  "homepage": "https://github.com/DHT-Uri/training-avada-uri#readme",
+  "description": ""
 }
