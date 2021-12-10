@@ -8,19 +8,17 @@ const {getAll: getAllProducts, getOne: getOneProduct, getFilteredProducts: getFi
 async function getProducts(ctx) {
     try {
         const {limit, sort} = ctx.query;
-        const products = getAllProducts(sort);
 
         if (limit) {
-            // console.log(products);
             ctx.body = {
                 data: getFilteredProducts(limit, sort)
             };
-
-        }else{
+        }else {
             ctx.body = {
-                data: products
+                data: getAllProducts(sort)
             };
         }
+
     } catch (e) {
         ctx.status = 404;
         ctx.body = {

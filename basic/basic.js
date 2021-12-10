@@ -3,97 +3,39 @@ const axios = require('axios');
 async function getUserInfo() {
     try {
         //Req: 1 - 2
-        const users = (await axios.get('https://jsonplaceholder.typicode.com/users')).data;
-        const posts = (await axios.get('https://jsonplaceholder.typicode.com/posts')).data;
-        const comments = (await axios.get('https://jsonplaceholder.typicode.com/comments')).data;
+
+        async function callApi(url) {
+            const resp = await axios.get('https://jsonplaceholder.typicode.com' + url);
+            return resp.data;
+        }
+
+        const [
+            users,
+            posts,
+            comments
+        ] = await Promise.all([
+            callApi('/users'),
+            callApi('/posts'),
+            callApi('/comments')
+        ]);
 
 
         //----------------------------------------------------------
         //Req: 3
 
-        // User For
-        // const userData = [];
-        // for (let i = 0; i < user.length; i++) {
-        //     let data = {
-        //         id: user[i].id,
-        //         name: user[i].name,
-        //         username: user[i].username,
-        //         email: user[i].email,
-        //         comments: [],
-        //         posts: []
-        //     }
-        //
-        //     for (let j = 0; j < posts.length; j++) {
-        //         if (user[i].id === posts[j].userId) {
-        //             let post = {
-        //                 id: posts[j].postId,
-        //                 title: posts[j].title,
-        //                 body: posts[j].body
-        //             }
-        //
-        //             for (let k = 0; k < comments.length; k++) {
-        //                 if (posts[j].id === comments[k].postId) {
-        //                     let comment = {
-        //                         id: comments[k].id,
-        //                         name: comments[k].name,
-        //                         body: comments[k].body
-        //                     }
-        //                     data.comments.push(comment);
-        //                 }
-        //             }
-        //
-        //             data.posts.push(post);
-        //         }
-        //     }
-        //
-        //     userData.push(data);
-        // }
-        //
-        // console.error(userData);
         const userData = users.map(user => {
-            const postData = posts.map(post => {
-                if (user.id === post.userId) {
-                    return {
-                        id: post.id,
-                        title: post.title,
-                        body: post.body
-                    };
-                }
-                return null;
-            }).filter(post => {
-                return post !== null;
-            });
-
-            const commentData = comments.map(comment => {
-                const postDt = postData.map(post => {
-                    if (post.id === comment.postId) {
-                        return {
-                            id: comment.id,
-                            postId: comment.postId,
-                            name: comment.name,
-                            body: comment.body
-                        }
-                    }
-                    return null;
-                }).filter(pt => {
-                    return pt !== null;
-                });
-
-                if (postDt.length !== 0) {
-                    return postDt[0];
-                }
-                return null;
-            }).filter(comment => {
-                return comment !== null;
-            });
+            // Câu này find luôn
+            const userPosts = posts.find(post => user.id === post.userId)
+            // commnent có email, dùng để find đc
+            const userComments = comments.find(comment => comment.email === user.email)
 
             return {
                 id: user.id,
                 name: user.name,
                 username: user.username,
                 email: user.email,
-                comments: commentData,
-                posts: postData
+                comments: userComments,
+                posts: userPosts
             }
         });
         // console.log(userData);
@@ -121,68 +63,19 @@ async function getUserInfo() {
 
         //----------------------------------------------------------
         //Req: 6
-        let user1stComment = newUserData[0];
-        let user1stPost = newUserData[0];
-
-        const userCheckData = newUserData.map(data => {
-            if (user1stComment.commentsCount < data.commentsCount) {
-                user1stComment = data;
-            }
-
-            if (user1stPost.postsCount < data.postsCount) {
-                user1stPost = data;
-            }
-
-            return true;
+        const user1stComment = newUserData.sort((a, b) => {
+            return  b.commentsCount - a.commentsCount; //Max to min
         });
 
-        // console.log(user1stComment);
+        const user1stPost = newUserData.sort((a, b) => {
+            return  b.postsCount - a.postsCount; //Max to min
+        });
+
+        // console.log(user1stComment[0]);
         // console.log(user1stPost);
 
         //----------------------------------------------------------
         //Req: 7
-        const demoData = [
-            {
-                id: 1,
-                name: 'Leanne Graham',
-                username: 'Bret',
-                email: 'Sincere@april.biz',
-                commentsCount: 50,
-                postsCount: 9
-            },
-            {
-                id: 2,
-                name: 'Ervin Howell',
-                username: 'Antonette',
-                email: 'Shanna@melissa.tv',
-                commentsCount: 50,
-                postsCount: 1
-            },
-            {
-                id: 3,
-                name: 'Clementine Bauch',
-                username: 'Samantha',
-                email: 'Nathan@yesenia.net',
-                commentsCount: 50,
-                postsCount: 6
-            },
-            {
-                id: 4,
-                name: 'Patricia Lebsack',
-                username: 'Karianne',
-                email: 'Julianne.OConner@kory.org',
-                commentsCount: 50,
-                postsCount: 2
-            },
-            {
-                id: 5,
-                name: 'Chelsey Dietrich',
-                username: 'Kamren',
-                email: 'Lucio_Hettinger@annie.ca',
-                commentsCount: 50,
-                postsCount: 5
-            }
-        ];
         const userDataSorted = newUserData.sort((a, b) => {
             // return  a.name.localeCompare(b.name); //String alpha
             return  b.postsCount - a.postsCount; //Max to min
@@ -191,8 +84,13 @@ async function getUserInfo() {
 
         //----------------------------------------------------------
         //Req: 8
-        const post = (await axios.get('https://jsonplaceholder.typicode.com/posts/1')).data;
-        const commentsOfPost = (await axios.get('https://jsonplaceholder.typicode.com/posts/1/comments')).data;
+        const [
+            post,
+            commentsOfPost
+        ] = await Promise.all([
+            callApi('/posts/1'),
+            callApi('/posts/1/comments')
+        ]);
 
         const postDt = { ...post, comments: commentsOfPost};
         console.log(postDt);

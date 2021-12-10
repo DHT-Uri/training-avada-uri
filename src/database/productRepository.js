@@ -4,6 +4,12 @@ const {data: products} = require('./products.json');
 
 faker.locale = "de";
 
+/**
+ *
+ * @param productDb
+ * @param sort
+ * @returns {*}
+ */
 function groupByProduct(productDb, sort) {
     if (sort === 'desc') {
         return productDb.sort((a, b) => {
@@ -33,7 +39,6 @@ function getAll(sort) {
 
         return products;
 
-
     }catch (e) {
         console.log(e);
     }
@@ -42,6 +47,7 @@ function getAll(sort) {
 /**
  *
  * @param limit
+ * @param sort
  */
 function getFilteredProducts(limit = 1, sort) {
     try {
