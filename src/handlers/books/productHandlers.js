@@ -7,7 +7,7 @@ const {getAll: getAllProducts, getOne: getOneProduct, getFilteredProducts: getFi
  */
 async function getProducts(ctx) {
     try {
-        const {limit, sort} = ctx.query;
+        const {limit, sort, fields} = ctx.query;
 
         if (limit) {
             ctx.body = {
@@ -15,7 +15,7 @@ async function getProducts(ctx) {
             };
         }else {
             ctx.body = {
-                data: getAllProducts(sort)
+                data: getAllProducts(sort, fields)
             };
         }
 

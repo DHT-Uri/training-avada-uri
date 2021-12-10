@@ -7,18 +7,18 @@ faker.locale = "de";
 
 /**
  *
- * @param productDb
+ * @param productData
  * @param sort
  * @returns {*}
  */
-function groupByProduct(productDb, sort) {
+function groupByProduct(productData, sort) {
     if (sort === 'desc') {
-        return productDb.sort((a, b) => {
+        return productData.sort((a, b) => {
             // return  a.name.localeCompare(b.name); //String
             return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         });
     }else{
-        return productDb.sort((a, b) => {
+        return productData.sort((a, b) => {
             return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
         });
     }
@@ -26,20 +26,43 @@ function groupByProduct(productDb, sort) {
 
 /**
  *
+ * @param fields
+ * @param productData
  * @returns {*}
  */
-function getAll(sort) {
+function getProductWithFields(fields = '', productData) {
+    const arrFields = fields.split(",");
+    const arrKey = Object.keys(productData[0]);
+
+    const productFields = arrKey.map(key => {
+        return arrFields.find(field => field === key);
+    }).filter(fl => fl !== undefined);
+
+    if (productFields.length === 0){
+        return productData;
+    }else{
+        return productData; //WithFields
+    }
+
+}
+
+/**
+ *
+ * @returns {*}
+ */
+function getAll(sort, fields) {
     try {
+        const productData = getProductWithFields(fields, products);
+
         if(sort){
             try {
-                return groupByProduct(products, sort);
+                return groupByProduct(productData, sort)
             }catch (e){
                 console.log(e);
             }
         }
 
-        return products;
-
+        return productData;
     }catch (e) {
         console.log(e);
     }
