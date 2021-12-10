@@ -1,6 +1,7 @@
 const fs = require('fs');
 const faker = require('faker');
 const {data: products} = require('./products.json');
+const productInputMiddleware = require('../middleware/productInputMiddleware.js');
 
 faker.locale = "de";
 
@@ -79,10 +80,61 @@ function getOne(id) {
  * @param data
  */
 function add(data) {
-    const updatedProducts = [data, ...products];
+    const updatedProducts = [...products, data];
     return fs.writeFileSync('./src/database/products.json', JSON.stringify({
         data: updatedProducts
     }));
+}
+
+
+function update(id, data) {
+    try{
+        const productId = parseInt(id);
+        const productsWithoutId = products.filter(product => product.id !== productId);
+
+        const newData = {id: productId, ...data};
+        const updatedProducts = [...productsWithoutId, newData];
+
+        fs.writeFileSync('./src/database/products.json', JSON.stringify({
+            data: updatedProducts
+        }));
+
+        return {
+            status: true,
+            message: "The product has been updated!"
+        }
+    }catch (e) {
+        return {
+            status: false,
+            message: e
+        }
+    }
+}
+
+/**
+ *
+ * @param id
+ * @returns {{message: string, status: boolean}|{message, status: boolean}}
+ */
+function remove(id) {
+    try{
+        const productId = parseInt(id);
+        const productsWithoutId = products.filter(product => product.id !== productId);
+
+        fs.writeFileSync('./src/database/products.json', JSON.stringify({
+            data: productsWithoutId
+        }));
+
+        return {
+            status: true,
+            message: "The product has been removed!"
+        }
+    }catch (e) {
+        return {
+            status: false,
+            message: e
+        }
+    }
 }
 
 /**
@@ -113,15 +165,14 @@ function getFakeData(i) {
 async function prepareData () {
     let newProducts = [];
 
-    for (let i = 1; i <= 1000; i++) {
+    for (let i = 1; i <= 10; i++) {
         const data = await getFakeData(i);
         newProducts = [ ...newProducts, data];
     }
 
-    const updatedProducts = [...newProducts, products]
     try {
         fs.writeFileSync('./src/database/products.json', JSON.stringify({
-            data: updatedProducts
+            data: newProducts
         }));
     } catch (e) {
         console.error(e);
@@ -137,5 +188,7 @@ module.exports = {
     getAll,
     getFilteredProducts,
     add,
+    update,
+    remove,
     prepareData
 };

@@ -1,4 +1,4 @@
-const {getAll: getAllProducts, getOne: getOneProduct, getFilteredProducts: getFilteredProducts, add: addProduct, prepareData: prepareProducts} = require("../../database/productRepository");
+const {getAll: getAllProducts, getOne: getOneProduct, getFilteredProducts: getFilteredProducts, add: addProduct, update: updateProduct, remove: removeProduct, prepareData: prepareProducts} = require("../../database/productRepository");
 
 /**
  *
@@ -80,6 +80,64 @@ async function save(ctx) {
     }
 }
 
+/**
+ *
+ * @param ctx
+ * @returns {{success: boolean, error}|{success: boolean}}
+ */
+async function update(ctx){
+    try {
+        const postData = ctx.request.body;
+        const {id} = ctx.params;
+        const update = updateProduct(id, postData);
+
+        if (update.status) {
+            ctx.status = 201;
+            return ctx.body = {
+                success: true,
+                message: update.message
+            }
+        }else{
+            return ctx.body = {
+                success: false,
+                error: update.message
+            }
+        }
+
+    } catch (e) {
+        return ctx.body = {
+            success: false,
+            error: e.message
+        }
+    }
+}
+
+async function remove(ctx){
+    try {
+        const {id} = ctx.params;
+        const remove = removeProduct(id);
+
+        if (remove.status) {
+            ctx.status = 201;
+            return ctx.body = {
+                success: true,
+                message: remove.message
+            }
+        }else{
+            return ctx.body = {
+                success: false,
+                error: remove.message
+            }
+        }
+
+    } catch (e) {
+        return ctx.body = {
+            success: false,
+            error: e.message
+        }
+    }
+}
+
 async function prepare(ctx) {
     try {
         const prepare = prepareProducts();
@@ -107,5 +165,7 @@ module.exports = {
     getProducts,
     getProduct,
     prepare,
-    save
+    save,
+    remove,
+    update
 };

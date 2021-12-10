@@ -17,9 +17,11 @@ router.get('/books/:id', bookHandler.getBook);
 router.post('/books', bookInputMiddleware, bookHandler.save);
 
 //Routes of product
-router.get('/product/prepare', productHandler.prepare);
+router.get('/product/prepare', productHandler.prepare); //Add sample data
 router.get('/products', productHandler.getProducts);
 router.get('/products/:id', productHandler.getProduct);
-router.post('/products', productInputMiddleware, productHandler.save);
+router.post('/products', productInputMiddleware.productInputMiddleware, productHandler.save);
+router.put('/products/:id', productInputMiddleware.productUpdateMiddleware, productHandler.update);
+router.del('/products/:id', productHandler.remove);
 
 module.exports = router;
