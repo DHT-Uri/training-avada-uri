@@ -3,7 +3,7 @@ const Router = require('koa-router');
 const bookHandler = require('../handlers/books/bookHandlers');
 const bookInputMiddleware = require('../middleware/bookInputMiddleware.js');
 
-const productHandler = require('../handlers/books/productHandlers');
+const productHandler = require('../handlers/products/productHandlers');
 const productInputMiddleware = require('../middleware/productInputMiddleware.js');
 
 // Prefix all routes with /books

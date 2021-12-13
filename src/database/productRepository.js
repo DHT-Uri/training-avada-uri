@@ -1,27 +1,37 @@
 const fs = require('fs');
 const faker = require('faker');
 const {data: products} = require('./products.json');
-const productInputMiddleware = require('../middleware/productInputMiddleware.js');
 
 faker.locale = "de";
 
-/**
- *
- * @param productData
- * @param sort
- * @returns {*}
- */
-function groupByProduct(productData, sort) {
-    if (sort === 'desc') {
-        return productData.sort((a, b) => {
-            // return  a.name.localeCompare(b.name); //String
-            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        });
-    }else{
-        return productData.sort((a, b) => {
-            return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+function getProducts ({sort, limit , isGetAll = 1}) {
+    let finalProducts = products;
+
+    if (sort) {
+        if (sort === 'desc') {
+            finalProducts = finalProducts.sort((a, b) => {
+                // return  a.name.localeCompare(b.name); //String
+                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+            });
+        }else {
+            finalProducts = finalProducts.sort((a, b) => {
+                return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+            });
+        }
+    }
+
+    if (limit) {
+        finalProducts = finalProducts.map((product, i) => {
+            if (i < limit) {
+                return product;
+            }
+            return null;
+        }).filter(product => {
+            return product !== null;
         });
     }
+
+    return finalProducts;
 }
 
 /**
@@ -48,50 +58,6 @@ function getProductWithFields(fields = '', productData) {
 
 /**
  *
- * @returns {*}
- */
-function getAll(sort, fields) {
-    try {
-        const productData = getProductWithFields(fields, products);
-
-        if(sort){
-            try {
-                return groupByProduct(productData, sort)
-            }catch (e){
-                console.log(e);
-            }
-        }
-
-        return productData;
-    }catch (e) {
-        console.log(e);
-    }
-}
-
-/**
- *
- * @param limit
- * @param sort
- */
-function getFilteredProducts(limit = 1, sort) {
-    try {
-        const productData = products.map((product, i) => {
-            if (i < limit) {
-                return product;
-            }
-            return null;
-        }).filter(product => {
-            return product !== null;
-        });
-
-        return groupByProduct(productData, sort);
-    }catch (e) {
-        console.log(e);
-    }
-}
-
-/**
- *
  * @param id
  */
 function getOne(id) {
@@ -109,14 +75,22 @@ function add(data) {
     }));
 }
 
-
+/**
+ *
+ * @param id
+ * @param data
+ * @returns {{message: string, status: boolean}|{message, status: boolean}}
+ */
 function update(id, data) {
     try{
         const productId = parseInt(id);
-        const productsWithoutId = products.filter(product => product.id !== productId);
+        const updatedProducts = products.map(product => {
+           if (product.id === productId) {
+               return {...product, ...data};
+           }
 
-        const newData = {id: productId, ...data};
-        const updatedProducts = [...productsWithoutId, newData];
+           return product;
+        });
 
         fs.writeFileSync('./src/database/products.json', JSON.stringify({
             data: updatedProducts
@@ -161,12 +135,12 @@ function remove(id) {
 }
 
 /**
- *
- * @param i
- * @returns data
+ * return data
  */
-function getFakeData(i) {
-    return new Promise((resolve, reject) => {
+function prepareData () {
+    let newProducts = [];
+
+    for (let i = 1; i <= 10; i++) {
         const data = {
             "id": i,
             "name": faker.commerce.productName(),
@@ -177,39 +151,22 @@ function getFakeData(i) {
             "createdAt": faker.datatype.datetime(),
             "image": faker.image.imageUrl()
         };
-        resolve(data);
-    });
-}
-
-/**
- *
- * @returns {Promise<boolean>}
- */
-async function prepareData () {
-    let newProducts = [];
-
-    for (let i = 1; i <= 10; i++) {
-        const data = await getFakeData(i);
         newProducts = [ ...newProducts, data];
     }
 
     try {
-        fs.writeFileSync('./src/database/products.json', JSON.stringify({
+        return fs.writeFileSync('./src/database/products.json', JSON.stringify({
             data: newProducts
         }));
     } catch (e) {
         console.error(e);
-        return false;
     }
-
-    return true;
 };
 
 
 module.exports = {
     getOne,
-    getAll,
-    getFilteredProducts,
+    getProducts,
     add,
     update,
     remove,

@@ -1,4 +1,4 @@
-const {getAll: getAllProducts, getOne: getOneProduct, getFilteredProducts: getFilteredProducts, add: addProduct, update: updateProduct, remove: removeProduct, prepareData: prepareProducts} = require("../../database/productRepository");
+const {getOne: getOneProduct, getProducts: getAll, add: addProduct, update: updateProduct, remove: removeProduct, prepareData: prepareProducts} = require("../../database/productRepository");
 
 /**
  *
@@ -7,18 +7,10 @@ const {getAll: getAllProducts, getOne: getOneProduct, getFilteredProducts: getFi
  */
 async function getProducts(ctx) {
     try {
-        const {limit, sort, fields} = ctx.query;
-
-        if (limit) {
-            ctx.body = {
-                data: getFilteredProducts(limit, sort)
-            };
-        }else {
-            ctx.body = {
-                data: getAllProducts(sort, fields)
-            };
-        }
-
+        const {sort, limit, fields} = ctx.query;
+        ctx.body = {
+            data: getAll({sort, limit})
+        };
     } catch (e) {
         ctx.status = 404;
         ctx.body = {
@@ -45,7 +37,6 @@ async function getProduct(ctx) {
             }
         }
 
-        ctx.status = 404;
         return ctx.body = {
             status: 'error!',
             message: 'Product Not Found with that id!'
@@ -97,13 +88,12 @@ async function update(ctx){
                 success: true,
                 message: update.message
             }
-        }else{
-            return ctx.body = {
-                success: false,
-                error: update.message
-            }
         }
 
+        return ctx.body = {
+            success: false,
+            error: update.message
+        }
     } catch (e) {
         return ctx.body = {
             success: false,
@@ -112,6 +102,11 @@ async function update(ctx){
     }
 }
 
+/**
+ *
+ * @param ctx
+ * @returns {Promise<{success: boolean, message: string}|{success: boolean, error}|{success: boolean, error: string}>}
+ */
 async function remove(ctx){
     try {
         const {id} = ctx.params;
@@ -123,11 +118,10 @@ async function remove(ctx){
                 success: true,
                 message: remove.message
             }
-        }else{
-            return ctx.body = {
-                success: false,
-                error: remove.message
-            }
+        }
+        return ctx.body = {
+            success: false,
+            error: remove.message
         }
 
     } catch (e) {
@@ -138,7 +132,12 @@ async function remove(ctx){
     }
 }
 
-async function prepare(ctx) {
+/**
+ *
+ * @param ctx
+ * @returns {{success: boolean, error}|{message: string, status: string}}
+ */
+function prepare(ctx) {
     try {
         const prepare = prepareProducts();
         if (prepare) {
@@ -147,12 +146,13 @@ async function prepare(ctx) {
                 status: 'Success!',
                 message: '1000 products have been added!'
             };
-        }else{
-            return ctx.body = {
+        }
+
+        return ctx.body = {
                 status: 'Error!',
                 message: 'The error has occurred!'
-            }
         }
+
     } catch (e) {
         return ctx.body = {
             success: false,
