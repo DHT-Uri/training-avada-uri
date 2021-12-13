@@ -4,7 +4,7 @@ const {data: products} = require('./products.json');
 
 faker.locale = "de";
 
-function getProducts ({sort, limit , isGetAll = 1}) {
+function getProducts ({sort, limit , fields}) {
     let finalProducts = products;
 
     if (sort) {
@@ -31,29 +31,22 @@ function getProducts ({sort, limit , isGetAll = 1}) {
         });
     }
 
-    return finalProducts;
-}
+    if(fields) {
+        const arrFields = fields.split(",");
+        const arrKey = Object.keys(finalProducts[0]);
 
-/**
- *
- * @param fields
- * @param productData
- * @returns {*}
- */
-function getProductWithFields(fields = '', productData) {
-    const arrFields = fields.split(",");
-    const arrKey = Object.keys(productData[0]);
+        const productFields = arrKey.map(key => {
+            return arrFields.find(field => field === key);
+        }).filter(fl => fl !== undefined);
 
-    const productFields = arrKey.map(key => {
-        return arrFields.find(field => field === key);
-    }).filter(fl => fl !== undefined);
-
-    if (productFields.length === 0){
-        return productData;
-    }else{
-        return productData; //WithFields
+        if (productFields.length === 0){
+            return finalProducts;
+        }else{
+            return finalProducts; //WithFields
+        }
     }
 
+    return finalProducts;
 }
 
 /**

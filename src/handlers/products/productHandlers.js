@@ -9,7 +9,7 @@ async function getProducts(ctx) {
     try {
         const {sort, limit, fields} = ctx.query;
         ctx.body = {
-            data: getAll({sort, limit})
+            data: getAll({sort, limit, fields})
         };
     } catch (e) {
         ctx.status = 404;
