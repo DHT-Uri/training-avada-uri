@@ -20,19 +20,21 @@ function App() {
     const {data: todos, loading, fetched} = useFetchApi({url: "..."});
     return (
         <>
-            <ul>
+            <ul className="todo-list">
                 {loading ? (
-                    <div>Loading users...</div>
+                    <div>Loading todo list...</div>
                 ) : (
                     <>
-                        {todos.map(todo => {
+                        {todos.map((todo, index)=> {
                             return (
-                                <li>{todo.todo}</li>
+                                <li className="todo"
+                                    key={index}
+                                >{todo.todo}</li>
                             )
                         })}
                     </>
                 )}
-                {fetched && (<><br/><p>Done fetching</p></>)}
+                {/*{fetched && (<><br/><p>-----Done-----</p></>)}*/}
             </ul>
         </>
   );
