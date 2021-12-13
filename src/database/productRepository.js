@@ -39,14 +39,29 @@ function getProducts ({sort, limit , fields}) {
             return arrFields.find(field => field === key);
         }).filter(fl => fl !== undefined);
 
-        if (productFields.length === 0){
-            return finalProducts;
-        }else{
-            return finalProducts; //WithFields
+        if (productFields.length !== 0){
+            finalProducts = finalProducts.map(product => {
+               return pick(product, productFields);
+            });
         }
     }
 
     return finalProducts;
+}
+
+/**
+ *
+ * @param object
+ * @param keys
+ * @returns {*}
+ */
+function pick(object, keys) {
+    return keys.reduce((obj, key) => {
+        if (object && object.hasOwnProperty(key)) {
+            obj[key] = object[key];
+        }
+        return obj;
+    }, {});
 }
 
 /**
