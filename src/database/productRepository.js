@@ -4,6 +4,13 @@ const {data: products} = require('./products.json');
 
 faker.locale = "de";
 
+/**
+ *
+ * @param sort
+ * @param limit
+ * @param fields
+ * @returns {*}
+ */
 function getProducts ({sort, limit , fields}) {
     let finalProducts = products;
 
