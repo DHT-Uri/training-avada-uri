@@ -49,9 +49,9 @@ async function addTodo(ctx) {
  */
 async function updateTodo(ctx){
     try {
-        const postData = ctx.request.body;
+        const data = ctx.request.body;
         const {id} = ctx.params;
-        const update = update(id, postData);
+        update(id, data);
 
         ctx.status = 201;
         return ctx.body = {

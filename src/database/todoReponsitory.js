@@ -24,7 +24,7 @@ function add(data) {
  *
  * @param id
  * @param data
- * @returns {{message: string, status: boolean}|{message, status: boolean}}
+ * @returns {{message, status: boolean}|void}
  */
 function update(id, data) {
     try{
