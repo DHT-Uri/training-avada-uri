@@ -10,8 +10,8 @@ function Todo({ todo, index, completeTodo, removeTodo }) {
         >
             {todo.todo}
             <div>
-                <button onClick={() => completeTodo(index)}>Complete</button>
-                <button onClick={() => removeTodo(index)}>x</button>
+                {!todo.isCompleted && (<button className="todo-complete" onClick={() => completeTodo(index)}>Complete</button>)}
+                <button className="todo-remove" onClick={() => removeTodo(index)}>x</button>
             </div>
         </div>
     );
@@ -59,13 +59,13 @@ function App() {
         })
     };
 
-    const completeTodo = index => {
+    const completeTodo = (index) => {
         const newTodos = [...todos];
         newTodos[index].isCompleted = true;
         setTodos(newTodos);
     };
 
-    const removeTodo = index => {
+    const removeTodo = (index) => {
         const newTodos = [...todos];
         newTodos.splice(index, 1);
         setTodos(newTodos);
@@ -75,7 +75,7 @@ function App() {
     <>
         <h2 className="todo-title">Todo list</h2>
         <TodoForm addTodo={handleAddTodo} />
-        <ul className="todo-list">
+        <div className="todo-list">
             {todos.map((todo,index) => (
                 <Todo
                     key={index}
@@ -84,11 +84,8 @@ function App() {
                     completeTodo={completeTodo}
                     removeTodo={removeTodo}
                 />
-                // return (
-                //   <li className="todo" key={index}>{todo.todo}</li>
-                // );
             ))}
-        </ul>
+        </div>
     </>
   );
 }

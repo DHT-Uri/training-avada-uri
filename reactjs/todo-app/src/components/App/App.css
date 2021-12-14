@@ -15,6 +15,7 @@ text-align: center;
   border-radius: 4px;
   width: 490px;
   padding: 5px;
+  margin-top: 15px;
 }
 
 .todo-input{
@@ -37,4 +38,20 @@ text-align: center;
   justify-content: space-between;
   margin-bottom: 6px;
   padding: 10px;
+}
+
+.todo-complete {
+  margin-right: 5px;
+  height: 25px;
+  background-color: #13bf7a38;
+  border: 1px solid #13bf7a38;
+  border-radius: 3px;
+}
+
+.todo-remove {
+  width: 25px;
+  height: 25px;
+  background-color: #bf131338;
+  border: 1px solid #bf131338;
+  border-radius: 3px;
 }
