@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
-// import useFetchApi from "../../hooks/useFetchApi";
+import useFetchApi from "../../hooks/useFetchApi";
 
 function Todo({ todo, index, completeTodo, removeTodo }) {
     return (
@@ -41,6 +41,8 @@ function TodoForm({ addTodo }) {
 }
 
 function App() {
+    const {data: checkData, loading, fetched} = useFetchApi({url: "http://localhost.com:5000/api/todos"});
+
   const [todos, setTodos] = useState(
     [
       { todo: "Learn about React", isCompleted: true },

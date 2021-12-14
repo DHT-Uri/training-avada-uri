@@ -1,0 +1,19 @@
+{
+  "data": [
+    {
+      "id": 3,
+      "todo": "Fight Club",
+      "isCompleted": "false"
+    },
+    {
+      "id": 2,
+      "todo": "Sharp Objects",
+      "isCompleted": "false"
+    },
+    {
+      "id": 1,
+      "todo": "Frankenstein",
+      "isCompleted": "true"
+    }
+  ]
+}
