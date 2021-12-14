@@ -39,4 +39,28 @@ function useFetchApi({url}) {
     }
 }
 
+function App() {
+    const {data: todos, loading, fetched} = useFetchApi({url: "..."});
+    return (
+        <>
+            <ul className="todo-list">
+                {loading ? (
+                    <div>Loading todo list...</div>
+                ) : (
+                    <>
+                        {todos.map((todo, index)=> {
+                            return (
+                                <li className="todo"
+                                    key={index}
+                                >{todo.todo}</li>
+                            )
+                        })}
+                    </>
+                )}
+                {/*{fetched && (<><br/><p>-----Done-----</p></>)}*/}
+            </ul>
+        </>
+    );
+}
+
 export default useFetchApi;
