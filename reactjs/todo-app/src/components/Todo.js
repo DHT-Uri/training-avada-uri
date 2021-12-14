@@ -1,6 +1,6 @@
 import React from "react";
 
-function Todo({ todo, index, completeTodo, removeTodo }) {
+function Todo({todo, completeTodo, removeTodo}) {
     return (
         <div
             className="todo"
@@ -8,8 +8,8 @@ function Todo({ todo, index, completeTodo, removeTodo }) {
         >
             {todo.todo}
             <div>
-                {!todo.isCompleted && (<button className="todo-complete" onClick={() => completeTodo(index)}>Complete</button>)}
-                <button className="todo-remove" onClick={() => removeTodo(index)}>x</button>
+                {!todo.isCompleted && (<button className="todo-complete" onClick={() => completeTodo(todo)}>Complete</button>)}
+                <button className="todo-remove" onClick={() => removeTodo(todo)}>x</button>
             </div>
         </div>
     );

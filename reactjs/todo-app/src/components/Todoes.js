@@ -23,7 +23,8 @@ const Todoes = () => {
     const addTodo = async text => {
         try {
             const todoList = await getTodoList();
-            const newId = Math.max.apply(Math, todoList['data'].map(todo => todo.id)) + 1;
+            const maxId = Math.max.apply(Math, todoList['data'].map(todo => todo.id));
+            const newId = maxId ? maxId + 1 : 0;
             const resp = await fetch("http://localhost.com:5000/api/todos", {
                 method: 'post',
                 headers: {
@@ -51,16 +52,17 @@ const Todoes = () => {
         }
     };
 
-    const completeTodo = async (todo, id) => {
+    const completeTodo = async (todo) => {
         try {
-            const resp = await fetch("http://localhost.com:5000/api/todos" + "/" + id, {
+            const todoId = todo.id;
+            const resp = await fetch(`http://localhost.com:5000/api/todos/${todoId}`, {
                 method: 'put',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     ...todo,
-                    completed: true
+                    isCompleted: true
                 }),
             })
 
@@ -68,10 +70,10 @@ const Todoes = () => {
             if (data.success) {
                 setTodos(currentTodoList => {
                     return currentTodoList.map(todo => {
-                        if (todo.id === parseInt(id)) {
+                        if (todo.id === todoId) {
                             return {
                                 ...todo,
-                                completed: true
+                                isCompleted: true
                             }
                         }
                         return todo;
@@ -84,14 +86,15 @@ const Todoes = () => {
         }
     }
 
-    const removeTodo = async (index, id) => {
+    const removeTodo = async (todo) => {
+        const todoId = todo.id;
         try {
-            const resp = await fetch(`http://localhost.com:5000/api/todo/${id}`, {
-                method: 'DELETE'
+            const resp = await fetch(`http://localhost.com:5000/api/todo/${todoId}`, {
+                method: 'delete'
             });
             const data = await resp.json();
             if (data.success) {
-                const newTodo = todos.filter(todo => todo.id !== parseInt(id));
+                const newTodo = todos.filter(todo => todo.id !== todoId);
                 setTodos(newTodo);
             }
         } catch (e) {
@@ -107,9 +110,7 @@ const Todoes = () => {
                 {todos.map((todo,index) => (
                     <Todo
                         key={index}
-                        index={index}
                         todo={todo}
-                        id={todo.id}
                         completeTodo={completeTodo}
                         removeTodo={removeTodo}
                     />

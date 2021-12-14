@@ -46,6 +46,7 @@ text-align: center;
   background-color: #13bf7a38;
   border: 1px solid #13bf7a38;
   border-radius: 3px;
+  cursor: pointer;
 }
 
 .todo-remove {
@@ -54,4 +55,5 @@ text-align: center;
   background-color: #bf131338;
   border: 1px solid #bf131338;
   border-radius: 3px;
+  cursor: pointer;
 }

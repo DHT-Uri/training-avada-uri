@@ -37,14 +37,10 @@ function update(id, data) {
             return todo;
         });
 
-        fs.writeFileSync('./src/database/todos.json', JSON.stringify({
+        return fs.writeFileSync('./src/database/todos.json', JSON.stringify({
             data: updatedTodos
         }));
 
-        return {
-            status: true,
-            message: "The todo has been updated!"
-        }
     }catch (e) {
         return {
             status: false,

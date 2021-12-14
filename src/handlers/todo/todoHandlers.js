@@ -53,18 +53,12 @@ async function updateTodo(ctx){
         const {id} = ctx.params;
         const update = update(id, postData);
 
-        if (update.status) {
-            ctx.status = 201;
-            return ctx.body = {
-                success: true,
-                message: update.message
-            }
+        ctx.status = 201;
+        return ctx.body = {
+            success: true,
+            message: update.message
         }
 
-        return ctx.body = {
-            success: false,
-            error: update.message
-        }
     } catch (e) {
         return ctx.body = {
             success: false,
@@ -82,14 +76,16 @@ async function removeTodo(ctx){
     try {
         const {id} = ctx.params;
         remove(id);
-        return {
-            status: "Success",
-            message: "Product has been removed!"
+
+        return ctx.body = {
+            success: true,
+            message: update.message
         }
+
     } catch (e) {
-        return {
-            status: "Error",
-            message: e
+        return ctx.body = {
+            success: false,
+            error: e.message
         }
     }
 }
