@@ -8,8 +8,8 @@ function useFetchApi({url}) {
     async function fetchData() {
         try {
             setLoading(true);
-             const resp = await fetch(url);
-             const respData = await resp.json();
+            const resp = await fetch(url);
+            const respData = await resp.json();
 
             setData(respData);
             setLoading(false);
