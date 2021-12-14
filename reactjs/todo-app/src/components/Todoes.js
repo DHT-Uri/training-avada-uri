@@ -17,7 +17,7 @@ const Todoes = () => {
     }
 
     useEffect(() => {
-        loadTodoList()
+        loadTodoList();
     }, [])
 
     const addTodo = async text => {
@@ -32,7 +32,7 @@ const Todoes = () => {
                 body: JSON.stringify({
                     "id": newId,
                     "todo": text,
-                    "isCompleted": true
+                    "isCompleted": false
                 }),
             });
 
@@ -42,7 +42,7 @@ const Todoes = () => {
                     return [{
                         "id": newId,
                         "todo": text,
-                        "isCompleted": true
+                        "isCompleted": false
                     }, ...prev]
                 })
             }
@@ -51,10 +51,10 @@ const Todoes = () => {
         }
     };
 
-    const completeTodo = async (todo, index, id) => {
+    const completeTodo = async (todo, id) => {
         try {
-            const resp = await fetch("http://localhost.com:5000/api/todo" + "/" + id, {
-                method: 'PUT',
+            const resp = await fetch("http://localhost.com:5000/api/todos" + "/" + id, {
+                method: 'put',
                 headers: {
                     'Content-Type': 'application/json',
                 },

@@ -23,6 +23,39 @@ function add(data) {
 /**
  *
  * @param id
+ * @param data
+ * @returns {{message: string, status: boolean}|{message, status: boolean}}
+ */
+function update(id, data) {
+    try{
+        const todoId = parseInt(id);
+        const updatedTodos = todos.map(todo => {
+            if (todo.id === todoId) {
+                return {...todos, ...data};
+            }
+
+            return todo;
+        });
+
+        fs.writeFileSync('./src/database/todos.json', JSON.stringify({
+            data: updatedTodos
+        }));
+
+        return {
+            status: true,
+            message: "The todo has been updated!"
+        }
+    }catch (e) {
+        return {
+            status: false,
+            message: e
+        }
+    }
+}
+
+/**
+ *
+ * @param id
  */
 function remove(id) {
     const todoId = parseInt(id);
@@ -36,5 +69,6 @@ function remove(id) {
 module.exports = {
     getAll,
     add,
+    update,
     remove
 };

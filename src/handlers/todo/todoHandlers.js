@@ -1,4 +1,4 @@
-const {getAll: getAll, add: add, remove: remove} = require("../../database/todoReponsitory");
+const {getAll: getAll, add: add, update: update, remove: remove} = require("../../database/todoReponsitory");
 
 /**
  *
@@ -29,14 +29,46 @@ async function addTodo(ctx) {
     try {
         const postData = ctx.request.body;
         add(postData);
-        return {
-            status: "Success",
-            message: "Product added successfully!"
+
+        ctx.status = 201;
+        return ctx.body = {
+            success: true
         }
     } catch (e) {
-        return {
-            status: "Error",
-            message: e
+        return ctx.body = {
+            success: false,
+            error: e.message
+        }
+    }
+}
+
+/**
+ *
+ * @param ctx
+ * @returns {Promise<{success: boolean, message: (string|*)}|{success: boolean, error}|{success: boolean, error: (string|*)}>}
+ */
+async function updateTodo(ctx){
+    try {
+        const postData = ctx.request.body;
+        const {id} = ctx.params;
+        const update = update(id, postData);
+
+        if (update.status) {
+            ctx.status = 201;
+            return ctx.body = {
+                success: true,
+                message: update.message
+            }
+        }
+
+        return ctx.body = {
+            success: false,
+            error: update.message
+        }
+    } catch (e) {
+        return ctx.body = {
+            success: false,
+            error: e.message
         }
     }
 }
@@ -65,5 +97,6 @@ async function removeTodo(ctx){
 module.exports = {
     getTodos,
     addTodo,
+    updateTodo,
     removeTodo
 };

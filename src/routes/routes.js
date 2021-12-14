@@ -29,6 +29,7 @@ router.del('/products/:id', productHandler.remove);
 //Routes of todos
 router.get('/todos', todoHandler.getTodos);
 router.post('/todos', todoHandler.addTodo);
+router.put('/todos/:id', todoHandler.updateTodo);
 router.del('/todo/:id', todoHandler.removeTodo);
 
 module.exports = router;
