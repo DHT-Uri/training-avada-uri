@@ -120,6 +120,4 @@ const Todoes = () => {
     );
 };
 
-Todoes.propTypes = {};
-
 export default Todoes;
