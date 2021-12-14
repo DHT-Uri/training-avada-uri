@@ -55,7 +55,7 @@ function App() {
                 isCompleted: false
             }
 
-            return [...prevTodos, newTodo]
+            return [newTodo, ...prevTodos]
         })
     };
 
