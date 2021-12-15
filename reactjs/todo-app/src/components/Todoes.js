@@ -1,17 +1,23 @@
-import React from 'react';
 import TodoForm from "./TodoForm";
 import Todo from "./Todo";
-import usrFetchApi from "../hooks/useFetchApi";
+import useFetchTodo from "../hooks/useFetchTodo";
+import makeRequest from "../helpers/api/makeRequest";
 
 const Todoes = () => {
-    const {data: todos, setData: setTodos , loading} = usrFetchApi.GetFetchApi({url: "http://localhost.com:5000/api/todos"});
+    const {data: todos, setData: setTodos , loading} = useFetchTodo({url: "http://localhost.com:5000/api/todos"});
 
     const addTodo = async (input) => {
         try {
             const maxId = Math.max.apply(Math, todos.map(todo => todo.id));
             const id = maxId ? maxId + 1 : 0;
 
-            const postData = await usrFetchApi.PostFetchApi({url: "http://localhost.com:5000/api/todos", input, id});
+            const newData = JSON.stringify({
+                "id": id,
+                "todo": input,
+                "isCompleted": false
+            });
+
+            const postData = await makeRequest({url: "http://localhost.com:5000/api/todos", method: "POST", postData: newData});
 
             if (postData.success) {
                 setTodos(prev => {
@@ -30,7 +36,12 @@ const Todoes = () => {
     const completeTodo = async (input) => {
         try {
             const todoId = input.id;
-            const putData = await usrFetchApi.UpdateFetchApi({url: `http://localhost.com:5000/api/todos/${todoId}`, data: input});
+
+            const updateData = JSON.stringify({
+                ...input,
+                isCompleted: true
+            })
+            const putData = await makeRequest({url: `http://localhost.com:5000/api/todos/${todoId}`, method: "PUT", postData: updateData});
 
             if (putData.success) {
                 setTodos(currentTodoList => {
@@ -54,9 +65,9 @@ const Todoes = () => {
     const removeTodo = async (input) => {
         const todoId = input.id;
         try {
-            const deleteData = await usrFetchApi.RemoveFetchApi({url: `http://localhost.com:5000/api/todo/${todoId}`});
+            const removeData = await makeRequest({url: `http://localhost.com:5000/api/todo/${todoId}`, method: "DELETE", postData: input});
 
-            if (deleteData.success) {
+            if (removeData.success) {
                 const newTodo = todos.filter(todo => todo.id !== todoId);
                 setTodos(newTodo);
             }
