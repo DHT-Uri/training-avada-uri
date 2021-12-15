@@ -1,73 +1,39 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import TodoForm from "./TodoForm";
 import Todo from "./Todo";
+import usrFetchApi from "../hooks/useFetchApi";
 
 const Todoes = () => {
-    const [todos, setTodos] = useState([]);
+    const {data: todos, setData: setTodos} = usrFetchApi.GetFetchApi({url: "http://localhost.com:5000/api/todos"});
 
-    async function getTodoList() {
-        const response = await fetch('http://localhost.com:5000/api/todos');
-        return await response.json();
-    }
-
-    async function loadTodoList() {
-        const todoList = await getTodoList();
-        setTodos(todoList['data']);
-        return todoList
-    }
-
-    useEffect(() => {
-        loadTodoList();
-    }, [])
-
-    const addTodo = async text => {
+    const addTodo = async (input) => {
         try {
-            const todoList = await getTodoList();
-            const maxId = Math.max.apply(Math, todoList['data'].map(todo => todo.id));
-            const newId = maxId ? maxId + 1 : 0;
-            const resp = await fetch("http://localhost.com:5000/api/todos", {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    "id": newId,
-                    "todo": text,
-                    "isCompleted": false
-                }),
-            });
+            const maxId = Math.max.apply(Math, todos.map(todo => todo.id));
+            const id = maxId ? maxId + 1 : 0;
 
-            const data = await resp.json();
-            if (data.success) {
+            const postData = await usrFetchApi.PostFetchApi({url: "http://localhost.com:5000/api/todos", input, id});
+
+            if (postData.success) {
                 setTodos(prev => {
                     return [{
-                        "id": newId,
-                        "todo": text,
+                        "id": id,
+                        "todo": input,
                         "isCompleted": false
                     }, ...prev]
                 })
             }
+
         } catch (e) {
             console.error(e)
         }
     };
 
-    const completeTodo = async (todo) => {
+    const completeTodo = async (input) => {
         try {
-            const todoId = todo.id;
-            const resp = await fetch(`http://localhost.com:5000/api/todos/${todoId}`, {
-                method: 'put',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    ...todo,
-                    isCompleted: true
-                }),
-            })
+            const todoId = input.id;
+            const putData = await usrFetchApi.UpdateFetchApi({url: `http://localhost.com:5000/api/todos/${todoId}`, data: input});
 
-            const data = await resp.json();
-            if (data.success) {
+            if (putData.success) {
                 setTodos(currentTodoList => {
                     return currentTodoList.map(todo => {
                         if (todo.id === todoId) {
@@ -86,14 +52,12 @@ const Todoes = () => {
         }
     }
 
-    const removeTodo = async (todo) => {
-        const todoId = todo.id;
+    const removeTodo = async (input) => {
+        const todoId = input.id;
         try {
-            const resp = await fetch(`http://localhost.com:5000/api/todo/${todoId}`, {
-                method: 'delete'
-            });
-            const data = await resp.json();
-            if (data.success) {
+            const deleteData = await usrFetchApi.RemoveFetchApi({url: `http://localhost.com:5000/api/todo/${todoId}`});
+
+            if (deleteData.success) {
                 const newTodo = todos.filter(todo => todo.id !== todoId);
                 setTodos(newTodo);
             }
