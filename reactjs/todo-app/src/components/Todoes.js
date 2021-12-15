@@ -2,6 +2,8 @@ import TodoForm from "./TodoForm";
 import Todo from "./Todo";
 import useFetchTodo from "../hooks/useFetchTodo";
 import makeRequest from "../helpers/api/makeRequest";
+import LoadingPageMarkup from "./loadingPage";
+import React from "react";
 
 const Todoes = () => {
     const {data: todos, setData: setTodos , loading} = useFetchTodo({url: "http://localhost.com:5000/api/todos"});
@@ -81,7 +83,7 @@ const Todoes = () => {
             <h2 className="todo-title">Todo list</h2>
             <TodoForm addTodo={addTodo} />
             {loading ? (
-                <div className="todo-loading">Loading...</div>
+                <LoadingPageMarkup />
             ) : (
                 <div className="todo-list">
                     <Todo todo={todos}

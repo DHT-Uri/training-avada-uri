@@ -12,7 +12,7 @@ const LoadingPage = () => {
                 <Layout.Section>
                     <Card sectioned>
                         <TextContainer>
-                            <SkeletonDisplayText size="small" />
+                            <SkeletonDisplayText size="medium" />
                             <SkeletonBodyText lines={9} />
                         </TextContainer>
                     </Card>
