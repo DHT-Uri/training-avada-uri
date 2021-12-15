@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import TodoForm from "./TodoForm";
 import Todo from "./Todo";
 import usrFetchApi from "../hooks/useFetchApi";
 
 const Todoes = () => {
-    const {data: todos, setData: setTodos} = usrFetchApi.GetFetchApi({url: "http://localhost.com:5000/api/todos"});
+    const {data: todos, setData: setTodos , loading} = usrFetchApi.GetFetchApi({url: "http://localhost.com:5000/api/todos"});
 
     const addTodo = async (input) => {
         try {
@@ -22,7 +22,6 @@ const Todoes = () => {
                     }, ...prev]
                 })
             }
-
         } catch (e) {
             console.error(e)
         }
@@ -70,16 +69,22 @@ const Todoes = () => {
         <>
             <h2 className="todo-title">Todo list</h2>
             <TodoForm addTodo={addTodo} />
-            <div className="todo-list">
-                {todos.map((todo,index) => (
-                    <Todo
-                        key={index}
-                        todo={todo}
-                        completeTodo={completeTodo}
-                        removeTodo={removeTodo}
-                    />
-                ))}
-            </div>
+            {loading ? (
+                <div className="todo-loading">Loading...</div>
+            ) : (
+                <div className="todo-list">
+                    {todos.map((todo,index) => (
+                        <Todo
+                            key={index}
+                            todo={todo}
+                            loading={loading}
+                            completeTodo={completeTodo}
+                            removeTodo={removeTodo}
+                        />
+                    ))}
+                </div>
+            )}
+
         </>
     );
 };

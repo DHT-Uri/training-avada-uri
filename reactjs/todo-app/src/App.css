@@ -57,3 +57,8 @@ text-align: center;
   border-radius: 3px;
   cursor: pointer;
 }
+
+.todo-loading {
+  padding: 10px;
+  font-size: 14px;
+}

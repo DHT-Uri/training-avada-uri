@@ -7,14 +7,17 @@ import React, {useEffect, useState} from 'react';
  * @constructor
  */
 function GetFetchApi({url}) {
+    const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
 
     async function fetchData() {
         try {
+            setLoading(true);
             const resp = await fetch(url);
             const respData = await resp.json();
 
             setData(respData['data']);
+            setLoading(false);
         }catch (e) {
             console.log(e);
         }
@@ -27,7 +30,8 @@ function GetFetchApi({url}) {
 
     return {
         data,
-        setData
+        setData,
+        loading
     }
 }
 
