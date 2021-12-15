@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {AppProvider, Frame, Page} from '@shopify/polaris';
+import React, {useCallback, useState} from 'react';
+import {AppProvider, Frame, Page, Avatar, Button, Card, ResourceItem, Filters, ResourceList, TextField, TextStyle} from '@shopify/polaris';
 import Todoes from "./components/Todoes";
 import TopBar from "./components/TopBars"
 import LoadingPageMarkup from "./components/loadingPage"
@@ -23,7 +23,7 @@ function App() {
                         width: 105,
                         topBarSource: 'https://cdn1.avada.io/logo/avada_logo_final_color.png',
                         url: 'https://www.figma.com/file/txDpLQBva5ERpLoePQMXam/Avada-Training-Docs?node-id=0%3A1',
-                        accessibilityLabel: 'AVADA',
+                        accessibilityLabel: 'User',
                     }}
                 }
             >

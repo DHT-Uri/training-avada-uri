@@ -84,15 +84,11 @@ const Todoes = () => {
                 <div className="todo-loading">Loading...</div>
             ) : (
                 <div className="todo-list">
-                    {todos.map((todo,index) => (
-                        <Todo
-                            key={index}
-                            todo={todo}
-                            loading={loading}
-                            completeTodo={completeTodo}
-                            removeTodo={removeTodo}
-                        />
-                    ))}
+                    <Todo todo={todos}
+                          loading={loading}
+                          completeTodo={completeTodo}
+                          removeTodo={removeTodo}
+                    />
                 </div>
             )}
 
