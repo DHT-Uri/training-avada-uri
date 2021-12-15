@@ -9,6 +9,10 @@ function App() {
     const [isLoading, setIsLoading] = useState(false);
     const actualPageMarkup = (
         <Page title="">
+            <div className="page-div-title">
+                <p className="page-title">Todoes</p>
+                <Button primary>Created todo</Button>
+            </div>
             <Todoes />
         </Page>
     );

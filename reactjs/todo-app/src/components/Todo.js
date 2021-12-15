@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Card, ResourceItem, ResourceList, TextStyle} from "@shopify/polaris";
+import {Card, ResourceItem, ResourceList, TextStyle, Button} from "@shopify/polaris";
 
 function Todo({todo, completeTodo, removeTodo}) {
     const [selectedItems, setSelectedItems] = useState([]);
@@ -38,10 +38,9 @@ function Todo({todo, completeTodo, removeTodo}) {
                                 <button className="todo-complete" onClick={() => completeTodo(todo)}>Complete</button>
                             </>)
                         }
-
+                        {/*<Button destructive>Delete</Button>*/}
                         <button className="todo-remove" onClick={() => removeTodo(todo)}>x</button>
                     </div>
-
                 </div>
             </ResourceItem>
         );

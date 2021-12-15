@@ -80,7 +80,6 @@ const Todoes = () => {
 
     return (
         <>
-            <h2 className="todo-title">Todo list</h2>
             <TodoForm addTodo={addTodo} />
             {loading ? (
                 <LoadingPageMarkup />
