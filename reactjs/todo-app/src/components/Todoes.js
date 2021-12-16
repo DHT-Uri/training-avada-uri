@@ -101,21 +101,23 @@ const Todoes = () => {
 
             const respJson = await resp.json();
             if (respJson.success) {
-                setTodos(todos => {
-                    const aaa = todos.map(todo => {
-                        if (ids.includes((todo.id).toString())) {
-                            return {
-                                ...todo,
-                                isCompleted: true
+                if (method === 'PUT'){
+                    setTodos(todos => {
+                        return todos.map(todo => {
+                            if (ids.includes((todo.id).toString())) {
+                                return {
+                                    ...todo,
+                                    isCompleted: true
+                                }
                             }
-                        }
-                        return todo;
+                            return todo;
+                        });
                     });
-
-                    return aaa;
-                });
+                }else{
+                    const newTodo = todos.filter(todo => !ids.includes((todo.id).toString()));
+                    setTodos(newTodo);
+                }
             }
-            debugger;
         }catch (e) {
             console.log(e);
         }

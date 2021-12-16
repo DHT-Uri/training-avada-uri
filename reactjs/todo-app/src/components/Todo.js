@@ -4,13 +4,15 @@ import {Card, ResourceItem, ResourceList, TextStyle} from "@shopify/polaris";
 function Todo({todo, multiRequest, completeTodo, removeTodo}) {
     const [selectedItems, setSelectedItems] = useState([]);
 
-    const hahaha = () => {
-        console.log(selectedItems);
+    const multiCompleteTodo = () => {
+        multiRequest({method: "PUT", arrIds: selectedItems});
+        setSelectedItems([]);
     }
 
-    const multiCompleteTodo = () => multiRequest({method: "PUT", arrIds: selectedItems});
-
-    const multiRemoveTodo = () => multiRequest({method: "DELETE", arrIds: selectedItems});
+    const multiRemoveTodo = () => {
+        multiRequest({method: "DELETE", arrIds: selectedItems});
+        setSelectedItems([]);
+    };
 
     const promotedBulkActions = [
         {content: 'Complete', onAction: multiCompleteTodo},
