@@ -1,4 +1,4 @@
-const {getAll: getAll, add: add, update: update, remove: remove} = require("../../database/todoReponsitory");
+const {getAll: getAll, getMultiple: getMultiple, putMultiple: putMultiple, removeMultiple: removeMultiple, add: add, update: update, remove: remove} = require("../../database/todoReponsitory");
 
 /**
  *
@@ -12,6 +12,80 @@ async function getTodos(ctx) {
         };
     } catch (e) {
         ctx.status = 500;
+        ctx.body = {
+            success: false,
+            data: [],
+            error: e.message
+        };
+    }
+}
+
+/**
+ *
+ * @param ctx
+ * @returns {Promise<void>}
+ */
+async function getMultiTodo(ctx) {
+    try {
+        const {ids} = ctx.query;
+        const arrId = ids ? ids.split(",") : [];
+        ctx.body = {
+            data: getMultiple(arrId)
+        };
+    } catch (e) {
+        ctx.status = 404;
+        ctx.body = {
+            success: false,
+            data: [],
+            error: e.message
+        };
+    }
+}
+
+/**
+ *
+ * @param ctx
+ * @returns {Promise<void>}
+ */
+async function putMultiTodo(ctx) {
+    try {
+        const {ids} = ctx.query;
+        const data = ctx.request.body;
+        const arrId = ids ? ids.split(",") : [];
+        putMultiple(arrId, data)
+
+        ctx.status = 201;
+        return ctx.body = {
+            success: true
+        }
+    } catch (e) {
+        ctx.status = 404;
+        ctx.body = {
+            success: false,
+            data: [],
+            error: e.message
+        };
+    }
+}
+
+/**
+ *
+ * @param ctx
+ * @returns {Promise<void>}
+ */
+async function removeMultiTodo(ctx) {
+    try {
+        const {ids} = ctx.query;
+        const arrId = ids ? ids.split(",") : [];
+
+        removeMultiple(arrId)
+
+        ctx.status = 201;
+        return ctx.body = {
+            success: true
+        }
+    } catch (e) {
+        ctx.status = 404;
         ctx.body = {
             success: false,
             data: [],
@@ -92,6 +166,9 @@ async function removeTodo(ctx){
 
 module.exports = {
     getTodos,
+    getMultiTodo,
+    putMultiTodo,
+    removeMultiTodo,
     addTodo,
     updateTodo,
     removeTodo

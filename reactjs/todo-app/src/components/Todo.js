@@ -1,12 +1,20 @@
 import React, {useState} from "react";
-import {Card, ResourceItem, ResourceList, TextStyle, Button} from "@shopify/polaris";
+import {Card, ResourceItem, ResourceList, TextStyle} from "@shopify/polaris";
 
-function Todo({todo, completeTodo, removeTodo}) {
+function Todo({todo, multiRequest, completeTodo, removeTodo}) {
     const [selectedItems, setSelectedItems] = useState([]);
 
+    const hahaha = () => {
+        console.log(selectedItems);
+    }
+
+    const multiCompleteTodo = () => multiRequest({method: "PUT", arrIds: selectedItems});
+
+    const multiRemoveTodo = () => multiRequest({method: "DELETE", arrIds: selectedItems});
+
     const promotedBulkActions = [
-        {content: 'Complete'},
-        {content: 'Delete'}
+        {content: 'Complete', onAction: multiCompleteTodo},
+        {content: 'Delete', onAction: multiRemoveTodo}
     ];
 
     return (
@@ -38,7 +46,6 @@ function Todo({todo, completeTodo, removeTodo}) {
                                 <button className="todo-complete" onClick={() => completeTodo(todo)}>Complete</button>
                             </>)
                         }
-                        {/*<Button destructive>Delete</Button>*/}
                         <button className="todo-remove" onClick={() => removeTodo(todo)}>x</button>
                     </div>
                 </div>

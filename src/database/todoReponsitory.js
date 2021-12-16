@@ -11,6 +11,53 @@ function getAll() {
 
 /**
  *
+ * @param ids
+ * @returns {*}
+ */
+function getMultiple(ids) {
+    return todos.map(todo => {
+        if (ids.includes((todo.id).toString())) {
+            return todo;
+        }
+
+        return null;
+    }).filter(todo => todo !== null);
+}
+
+/**
+ *
+ * @param ids
+ * @param data
+ */
+function putMultiple(ids, data) {
+    const updatedTodos = todos.map(todo => {
+        if (ids.includes((todo.id).toString())) {
+            const newData = data.find(dt => dt.id === todo.id);
+            return {...todo, ...newData};
+        }
+
+        return todo;
+    });
+
+    return fs.writeFileSync('./src/database/todos.json', JSON.stringify({
+        data: updatedTodos
+    }));
+}
+
+/**
+ *
+ * @param ids
+ */
+function removeMultiple(ids) {
+    const updatedTodos = todos.filter(todo => !ids.includes((todo.id).toString()));
+
+    return fs.writeFileSync('./src/database/todos.json', JSON.stringify({
+        data: updatedTodos
+    }));
+}
+
+/**
+ *
  * @param data
  */
 function add(data) {
@@ -64,6 +111,9 @@ function remove(id) {
 
 module.exports = {
     getAll,
+    getMultiple,
+    putMultiple,
+    removeMultiple,
     add,
     update,
     remove

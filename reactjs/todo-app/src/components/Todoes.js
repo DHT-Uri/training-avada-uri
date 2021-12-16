@@ -78,15 +78,62 @@ const Todoes = () => {
         }
     };
 
+    async function multiRequest({method, arrIds}) {
+        try {
+            const ids = arrIds.toString();
+            const respTodo = await fetch(`http://localhost.com:5000/api/todo?ids=${ids}`);
+            const respData = await respTodo.json();
+
+            const putData = respData['data'].map(todo => {
+                return {
+                    ...todo,
+                    isCompleted: true
+                }
+            });
+
+            const resp = await fetch(`http://localhost.com:5000/api/todo?ids=${ids}`, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(putData)
+            });
+
+            const respJson = await resp.json();
+            if (respJson.success) {
+                setTodos(todos => {
+                    const aaa = todos.map(todo => {
+                        if (ids.includes((todo.id).toString())) {
+                            return {
+                                ...todo,
+                                isCompleted: true
+                            }
+                        }
+                        return todo;
+                    });
+
+                    return aaa;
+                });
+            }
+            debugger;
+        }catch (e) {
+            console.log(e);
+        }
+    }
+
     return (
         <>
-            <TodoForm addTodo={addTodo} />
+            <div className="page-div-title">
+                <p className="page-title">Todoes</p>
+                <TodoForm addTodo={addTodo} />
+            </div>
             {loading ? (
                 <LoadingPageMarkup />
             ) : (
                 <div className="todo-list">
                     <Todo todo={todos}
                           loading={loading}
+                          multiRequest = {multiRequest}
                           completeTodo={completeTodo}
                           removeTodo={removeTodo}
                     />

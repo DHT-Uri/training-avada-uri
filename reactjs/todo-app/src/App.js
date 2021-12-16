@@ -1,18 +1,13 @@
-import React, {useCallback, useState} from 'react';
-import {AppProvider, Frame, Page, Avatar, Button, Card, ResourceItem, Filters, ResourceList, TextField, TextStyle} from '@shopify/polaris';
+import React, {useState} from 'react';
+import {AppProvider, Frame, Page} from '@shopify/polaris';
 import Todoes from "./components/Todoes";
 import TopBar from "./components/TopBars"
 import LoadingPageMarkup from "./components/loadingPage"
 
 function App() {
-
     const [isLoading, setIsLoading] = useState(false);
     const actualPageMarkup = (
         <Page title="">
-            <div className="page-div-title">
-                <p className="page-title">Todoes</p>
-                <Button primary>Created todo</Button>
-            </div>
             <Todoes />
         </Page>
     );
@@ -30,6 +25,7 @@ function App() {
                         accessibilityLabel: 'User',
                     }}
                 }
+                i18n={{}}
             >
                 <Frame topBar={<TopBar />}>
                     {pageMarkup}
