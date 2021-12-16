@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Card, ResourceItem, ResourceList, TextStyle} from "@shopify/polaris";
 
-function Todo({todo, multiRequest, completeTodo, removeTodo}) {
+function Todo({todo, multiRequest, completeTodo, removeTodo, loading}) {
     const [selectedItems, setSelectedItems] = useState([]);
 
     const multiCompleteTodo = () => {
@@ -27,6 +27,7 @@ function Todo({todo, multiRequest, completeTodo, removeTodo}) {
                 selectedItems={selectedItems}
                 onSelectionChange={setSelectedItems}
                 promotedBulkActions={promotedBulkActions}
+                loading={loading}
             />
         </Card>
     );

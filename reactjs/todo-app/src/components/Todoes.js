@@ -3,13 +3,15 @@ import Todo from "./Todo";
 import useFetchTodo from "../hooks/useFetchTodo";
 import makeRequest from "../helpers/api/makeRequest";
 import LoadingPageMarkup from "./loadingPage";
-import React from "react";
+import React, {useState} from "react";
 
 const Todoes = () => {
     const {data: todos, setData: setTodos , loading} = useFetchTodo({url: "http://localhost.com:5000/api/todos"});
+    const [updateLoading, setUpdateLoading] = useState(false);
 
     const addTodo = async (input) => {
         try {
+            setUpdateLoading(true);
             const maxId = Math.max.apply(Math, todos.map(todo => todo.id));
             const id = maxId ? maxId + 1 : 0;
 
@@ -30,6 +32,7 @@ const Todoes = () => {
                     }, ...prev]
                 })
             }
+            setUpdateLoading(false);
         } catch (e) {
             console.error(e)
         }
@@ -37,8 +40,8 @@ const Todoes = () => {
 
     const completeTodo = async (input) => {
         try {
+            setUpdateLoading(true);
             const todoId = input.id;
-
             const updateData = JSON.stringify({
                 ...input,
                 isCompleted: true
@@ -58,6 +61,7 @@ const Todoes = () => {
                     })
                 });
             }
+            setUpdateLoading(false);
         } catch
             (e) {
             console.error(e)
@@ -65,14 +69,16 @@ const Todoes = () => {
     }
 
     const removeTodo = async (input) => {
-        const todoId = input.id;
         try {
+            setUpdateLoading(true);
+            const todoId = input.id;
             const removeData = await makeRequest({url: `http://localhost.com:5000/api/todo/${todoId}`, method: "DELETE", postData: input});
 
             if (removeData.success) {
                 const newTodo = todos.filter(todo => todo.id !== todoId);
                 setTodos(newTodo);
             }
+            setUpdateLoading(false);
         } catch (e) {
             console.error(e)
         }
@@ -80,6 +86,7 @@ const Todoes = () => {
 
     async function multiRequest({method, arrIds}) {
         try {
+            setUpdateLoading(true);
             const ids = arrIds.toString();
             const respTodo = await fetch(`http://localhost.com:5000/api/todo?ids=${ids}`);
             const respData = await respTodo.json();
@@ -118,6 +125,7 @@ const Todoes = () => {
                     setTodos(newTodo);
                 }
             }
+            setUpdateLoading(false);
         }catch (e) {
             console.log(e);
         }
@@ -132,9 +140,10 @@ const Todoes = () => {
             {loading ? (
                 <LoadingPageMarkup />
             ) : (
+
                 <div className="todo-list">
                     <Todo todo={todos}
-                          loading={loading}
+                          loading={updateLoading}
                           multiRequest = {multiRequest}
                           completeTodo={completeTodo}
                           removeTodo={removeTodo}
