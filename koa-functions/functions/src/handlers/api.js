@@ -1,6 +1,5 @@
-const Koa = require('koa');
-const koaBody = require('koa-body');
-const routes = require('../routes/routes.js');
+const Koa = require("koa");
+const routes = require("../routes/routes.js");
 
 const app = new Koa();
 
