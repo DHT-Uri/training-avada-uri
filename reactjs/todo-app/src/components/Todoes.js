@@ -4,10 +4,15 @@ import useFetchTodo from "../hooks/useFetchTodo";
 import makeRequest from "../helpers/api/makeRequest";
 import LoadingPageMarkup from "./loadingPage";
 import React, {useState} from "react";
+import {Page, Button} from '@shopify/polaris';
 
 const Todoes = () => {
-    const {data: todos, setData: setTodos , loading} = useFetchTodo({url: "http://localhost.com:5000/api/todos"});
+    const urlApi = "http://localhost.com:5000/api";
+    const {data: todos, setData: setTodos , loading} = useFetchTodo({url: `${urlApi}/todos`});
     const [updateLoading, setUpdateLoading] = useState(false);
+
+    const [active, setActive] = useState(false);
+    const toggleModal = () => setActive((active) => !active);
 
     const addTodo = async (input) => {
         try {
@@ -21,7 +26,7 @@ const Todoes = () => {
                 "isCompleted": false
             });
 
-            const postData = await makeRequest({url: "http://localhost.com:5000/api/todos", method: "POST", postData: newData});
+            const postData = await makeRequest({url: `${urlApi}/todos`, method: "POST", postData: newData});
 
             if (postData.success) {
                 setTodos(prev => {
@@ -32,9 +37,10 @@ const Todoes = () => {
                     }, ...prev]
                 })
             }
-            setUpdateLoading(false);
         } catch (e) {
             console.error(e)
+        }finally {
+            setUpdateLoading(false);
         }
     };
 
@@ -46,7 +52,7 @@ const Todoes = () => {
                 ...input,
                 isCompleted: true
             })
-            const putData = await makeRequest({url: `http://localhost.com:5000/api/todos/${todoId}`, method: "PUT", postData: updateData});
+            const putData = await makeRequest({url: `${urlApi}/todos/${todoId}`, method: "PUT", postData: updateData});
 
             if (putData.success) {
                 setTodos(currentTodoList => {
@@ -61,10 +67,11 @@ const Todoes = () => {
                     })
                 });
             }
-            setUpdateLoading(false);
         } catch
             (e) {
             console.error(e)
+        }finally {
+            setUpdateLoading(false);
         }
     }
 
@@ -72,15 +79,16 @@ const Todoes = () => {
         try {
             setUpdateLoading(true);
             const todoId = input.id;
-            const removeData = await makeRequest({url: `http://localhost.com:5000/api/todo/${todoId}`, method: "DELETE", postData: input});
+            const removeData = await makeRequest({url: `${urlApi}/todo/${todoId}`, method: "DELETE", postData: input});
 
             if (removeData.success) {
                 const newTodo = todos.filter(todo => todo.id !== todoId);
                 setTodos(newTodo);
             }
-            setUpdateLoading(false);
         } catch (e) {
             console.error(e)
+        }finally {
+            setUpdateLoading(false);
         }
     };
 
@@ -88,7 +96,7 @@ const Todoes = () => {
         try {
             setUpdateLoading(true);
             const ids = arrIds.toString();
-            const respTodo = await fetch(`http://localhost.com:5000/api/todo?ids=${ids}`);
+            const respTodo = await fetch(`${urlApi}/todo?ids=${ids}`);
             const respData = await respTodo.json();
 
             const putData = respData['data'].map(todo => {
@@ -98,7 +106,7 @@ const Todoes = () => {
                 }
             });
 
-            const resp = await fetch(`http://localhost.com:5000/api/todo?ids=${ids}`, {
+            const resp = await fetch(`${urlApi}/todo?ids=${ids}`, {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
@@ -125,22 +133,30 @@ const Todoes = () => {
                     setTodos(newTodo);
                 }
             }
-            setUpdateLoading(false);
         }catch (e) {
             console.log(e);
+        }finally {
+            setUpdateLoading(false);
         }
     }
 
     return (
-        <>
-            <div className="page-div-title">
-                <p className="page-title">Todoes</p>
-                <TodoForm addTodo={addTodo} />
-            </div>
+        <Page
+            breadcrumbs={[{content: 'Home', url: '/'}]}
+            title="Todoes"
+            primaryAction={
+                <Button
+                    primary
+                    onClick={toggleModal}
+                >
+                    Creat new todo
+                </Button>
+            }
+        >
+            <TodoForm addTodo={addTodo} toggleModal={toggleModal} active={active}/>
             {loading ? (
                 <LoadingPageMarkup />
             ) : (
-
                 <div className="todo-list">
                     <Todo todo={todos}
                           loading={updateLoading}
@@ -150,8 +166,7 @@ const Todoes = () => {
                     />
                 </div>
             )}
-
-        </>
+        </Page>
     );
 };
 

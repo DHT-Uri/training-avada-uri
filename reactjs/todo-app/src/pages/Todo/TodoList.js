@@ -1,5 +1,5 @@
 import Todoes from "../../components/Todoes";
-import {Layout, Page, Card, Button} from "@shopify/polaris";
+import {Layout, Page, Card} from "@shopify/polaris";
 import React from "react";
 
 /**
@@ -15,9 +15,6 @@ export default function TodoList() {
                   <Card>
                       <Card.Section>
                           <Todoes />
-                      </Card.Section>
-                      <Card.Section>
-                          <Button destructive url='/'>Exit</Button>
                       </Card.Section>
                   </Card>
               </Layout.Section>

@@ -14,11 +14,11 @@ function useFetchTodo({url}) {
             setLoading(true);
             const resp = await fetch(url);
             const respData = await resp.json();
-
             setData(respData['data']);
-            setLoading(false);
         }catch (e) {
             console.log(e);
+        }finally {
+            setLoading(false);
         }
     }
 

@@ -1,12 +1,9 @@
 import React, {useState} from "react";
 import {Button, Form, FormLayout, Modal, Stack, TextField} from "@shopify/polaris";
 
-function TodoForm({ addTodo }) {
-    const [active, setActive] = useState(false);
-    const [value, setValue] = useState("");
+function TodoForm({addTodo , toggleModal, active}) {
 
-    const toggleModal = () => setActive((active) => !active);
-    const activator = <Button primary onClick={toggleModal}>Created todo</Button>;
+    const [value, setValue] = useState("");
 
     const handleSubmit = () => {
         if (!value) return;
@@ -18,7 +15,6 @@ function TodoForm({ addTodo }) {
     return (
         <>
             <Modal
-                activator={activator}
                 open={active}
                 onClose={toggleModal}
                 title="Create a new todo"
