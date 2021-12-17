@@ -1,19 +1,15 @@
-import React, {useState} from 'react';
-import {AppProvider, Frame, Page} from '@shopify/polaris';
-import Todoes from "./components/Todoes";
-import TopBar from "./components/TopBars"
-import LoadingPageMarkup from "./components/loadingPage"
+import React from 'react';
+import {AppProvider} from '@shopify/polaris';
+import AppLayout from "./layout/AppLayout";
+import {BrowserRouter} from "react-router-dom";
+import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
+import Routes from "./routes/routes";
+import Link from "./components/Link";
+import {createBrowserHistory} from 'history';
+
+const history = createBrowserHistory();
 
 function App() {
-    const [isLoading, setIsLoading] = useState(false);
-    const actualPageMarkup = (
-        <Page title="">
-            <Todoes />
-        </Page>
-    );
-
-    const pageMarkup = isLoading ? <LoadingPageMarkup /> : actualPageMarkup;
-
     return (
         <div style={{height: '500px'}}>
             <AppProvider
@@ -26,10 +22,15 @@ function App() {
                     }}
                 }
                 i18n={{}}
+                linkComponent={Link}
             >
-                <Frame topBar={<TopBar />}>
-                    {pageMarkup}
-                </Frame>
+                <BrowserRouter history={history}>
+                    <AppLayout>
+                        <ErrorBoundary>
+                            <Routes/>
+                        </ErrorBoundary>
+                    </AppLayout>
+                </BrowserRouter>
             </AppProvider>
         </div>
     );
