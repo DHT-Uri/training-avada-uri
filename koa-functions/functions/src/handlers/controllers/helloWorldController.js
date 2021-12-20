@@ -5,7 +5,7 @@
  */
 async function hello(ctx) {
   return ctx.body = {
-    message: 'Hello World'
+    message: 'Hello'
   }
 }
 
